@@ -11,11 +11,39 @@
 #define MAX_POINTS 10
 #define MAX_RAND 10
 
+Stack *stack_orderPoints(Stack *sin)
+{
+    Stack *sout;
+    int *tmp, cmp;
+
+    sout = stack_init();
+
+    if (!sout)
+        return NULL;
+
+    while (!stack_isEmpty(sin))
+    {
+        tmp = stack_top(sin);
+        stack_pop(sin);
+
+        cmp = point_cmpEuDistance(stack_top(sout), tmp);
+
+        while (!stack_isEmpty(sout) && cmp == -1)
+        {
+            stack_push(sin, stack_top(sout));
+            stack_pop(sout);
+        }
+        stack_push(sout, tmp);
+    }
+
+    return sout;
+}
+
 int main(int argc, char **argv)
 {
     int n, i, j;
     double d;
-    Stack *stack;
+    Stack *sin, *sout;
     Point *origen, *p[MAX_POINTS];
 
     /* Comprobamos la command line */
@@ -54,18 +82,29 @@ int main(int argc, char **argv)
     }
 
     /* Almacenar los puntos en una pila */
-    stack = stack_init();
+    sin = stack_init();
 
-    if (!stack)
+    if (!sin)
         return 1;
 
     /* TODO: MIRAR SI LA PILA ESTÁ LLENA */
-    for (i = 0; i < n; i++) {
-        stack_push(stack, p[i]);
+    for (i = 0; i < n; i++)
+    {
+        stack_push(sin, p[i]);
     }
 
-    stack_print(stdout, stack, point_print);
+    /* Imprimimos los punts */
+    fprintf(stdout, "Original stack: \n");
+    stack_print(stdout, sin, point_print);
 
     /* Ordenamos la pila de mayor a menor según la distancia euclídea entre los puntos */
+    sout = stack_orderPoints(sin);
+
+    fprintf(stdout, "Ordered stack: \n");
+    stack_print(stdout, sout, point_print);
+
+    fprintf(stdout, "Original stack: \n");
+    stack_print(stdout, sin, point_print);
+
     return 0;
 }
