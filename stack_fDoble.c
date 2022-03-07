@@ -12,6 +12,7 @@ struct _Stack
     int top;
 };
 
+// TODO: COMPLETAR EL CONTROL DE ERRORES
 Stack *stack_orderPoints(Stack *sin)
 {
     Stack *sout, *e1, *e2;
