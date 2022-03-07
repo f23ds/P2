@@ -59,12 +59,13 @@ int main(int argc, char **argv)
     if (!stack)
         return 1;
 
-    // TODO: MIRAR SI LA PILA ESTÁ LLENA
+    /* TODO: MIRAR SI LA PILA ESTÁ LLENA */
     for (i = 0; i < n; i++) {
         stack_push(stack, p[i]);
     }
 
-    // stack_print(stdout, stack);
+    stack_print(stdout, stack, point_print);
 
     /* Ordenamos la pila de mayor a menor según la distancia euclídea entre los puntos */
+    return 0;
 }

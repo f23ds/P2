@@ -1,4 +1,3 @@
-// [ALL]
 /**
  * @file  stack_fDoble.h
  * @author Prog2
