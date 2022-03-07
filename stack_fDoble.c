@@ -24,7 +24,8 @@ Stack *stack_orderPoints(Stack *sin)
     while (stack_isEmpty(sin))
     {
         e1 = stack_pop(sin);
-        while (!stack_isEmpty(sout) && e1 < stack_top(sout)) {
+        while (!stack_isEmpty(sout) && e1 < stack_top(sout))
+        {
             e2 = stack_pop(sout);
             stack_push(sin, e2);
         }
