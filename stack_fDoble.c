@@ -29,93 +29,90 @@ struct _Stack
     int top;
     int capacity;
 };
-/**
- * @brief Structure to implement a stack. To be defined in stack_fp.c
- *
- **/
+
 typedef struct _Stack Stack;
 
-/**
- * @brief Typedef for a function pointer to print a stack element at stream
- **/
 typedef int (*P_stack_ele_print)(FILE *, const void *);
 
-/**
- * @brief This function initializes an empty stack.
- *
- * @return   This function returns a pointer to the stack or a null pointer
- * if insufficient memory is available to create the stack.
- *  */
 Stack *stack_init()
 {
     Stack *s = NULL;
     int i;
 
+    /* Creamos la stack */
     s = (Stack *)malloc(sizeof(Stack));
     if (s == NULL)
         return NULL;
 
+    /* Inicializamos la capacidad */
     s->capacity = INIT_CAPACITY;
 
-    *(s->items) = malloc(s->capacity * sizeof(void));
+    /* Reservamos memoria para el global pointer de items */
+    s->items = (void **)calloc(INIT_CAPACITY, sizeof(void *));
 
-    for (i = 0; i < s->capacity; i++)
-    {
-        s->items[i] = NULL;
-    }
-
+    /* Inicializamos el top */
     s->top = -1;
     return s;
 }
 
-/**
- * @brief  This function frees the memory used by the stack.
- * @param s A pointer to the stack
- *  */
 void stack_free(Stack *s)
 {
     int i;
 
     if (s == NULL)
         return NULL;
+
+    /* Liberamos el global pointer */
+    free(s->items);
+    /* Liberamos la stack */
+    free(s);
 }
 
-/**
- * @brief This function is used to insert a element at the top of the stack.
- *
- * A reference of the element is added to the stack container and the size of the stack is increased by 1.
- * Time complexity: O(1). This function reallocate the stack capacity when it is full.
- * @param s A pointer to the stack.
- * @param ele A pointer to the element to be inserted
- * @return This function returns OK on success or ERROR if the stack is full.
- *  */
 Status stack_push(Stack *s, const void *ele);
 
-/**
- * @brief  This function is used to extract a element from the top of the stack.
- *
- * The size of the stack is decreased by 1. Time complexity: O(1).
- * @param s A pointer to the stack.
- * @return This function returns a pointer to the extracted element on success
- * or null when the stack is empty.
- * */
-void *stack_pop(Stack *s);
+void *stack_pop(Stack *s)
+{
+    void *e = NULL;
 
-/**
- * @brief  This function is used to reference the top (or the newest) element of the stack.
- *
- * @param s A pointer to the stack.
- * @return This function returns a pointer to the newest element of the stack.
- * */
-void *stack_top(const Stack *s);
+    if (s == NULL || stack_isEmpty(s))
+        return NULL;
 
-/**
- * @brief Returns whether the stack is empty
- * @param s A pointer to the stack.
- * @return TRUE or FALSE
- */
-Bool stack_isEmpty(const Stack *s);
+    e = s->items[s->top];
+    s->items[s->top] = NULL;
+    s->top--;
 
+    return e;
+}
+
+void *stack_top(const Stack *s)
+{
+    if (s == NULL || stack_isEmpty(s))
+        return NULL;
+
+    return s->items[s->top];
+}
+
+Bool stack_isEmpty(const Stack *s)
+{
+    if (s == NULL)
+        return TRUE;
+
+    if (s->top == -1)
+        return TRUE;
+
+    return FALSE;
+}
+
+Bool _stack_isFull(const Stack *s)
+{
+    if (s == NULL)
+        return TRUE;
+
+    if (s->top == s->capacity - 1)
+        return TRUE;
+
+    return FALSE;
+}
 /**
  * @brief This function returns the size of the stack.
  *
